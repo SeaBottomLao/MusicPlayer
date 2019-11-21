@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        style="@style/LayoutBorder">
+
+        <AutoCompleteTextView
+            android:id="@+id/textfield"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="@drawable/bg_edit_text"
+            android:completionThreshold="1"
+            android:hint="请输入要查询的单词"
+            android:singleLine="true"
+            android:textSize="11pt">
+        </AutoCompleteTextView>
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="查找"
+            android:textSize="9pt">
+        </Button>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        style="@style/LayoutBorder">
+
+    </FrameLayout>
+
+</LinearLayout>

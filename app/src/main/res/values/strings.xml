@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">简单单词本</string>
+    <string name="Help">
+        这是一个简单的单词本!\n
+        该单词本可以对单词进行简单的增删改查功能！\n
+        该单词本通过SQlite实现！\n
+        感谢您的阅读！\n
+    </string>
+</resources>

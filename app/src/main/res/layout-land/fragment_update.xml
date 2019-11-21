@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        style="@style/UpdateFragmentLayout">
+
+        <EditText
+            style="@style/UpdateFragmentEditText"
+            android:singleLine="true"
+            android:hint="请输入单词正确拼写"
+            android:id="@+id/input_eng"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/UpdateFragmentLayout">
+        <EditText
+            style="@style/UpdateFragmentEditText"
+            android:singleLine="true"
+            android:hint="请输入单词中文翻译"
+            android:id="@+id/input_chn"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/UpdateFragmentLayout">
+        <EditText
+            style="@style/UpdateFragmentEditText"
+            android:hint="请输入单词英文例句"
+            android:id="@+id/input_sample"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_back"
+            android:textSize="9pt"
+            android:text="返回"
+            android:layout_marginRight="15px"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_submit"
+            android:textSize="9pt"
+            android:layout_marginLeft="15px"
+            android:text="提交" />
+    </LinearLayout>
+
+
+</LinearLayout>

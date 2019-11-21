@@ -1,0 +1,38 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="LayoutBorder">
+        <item name="android:background">@drawable/bg_black_border</item>
+        <item name="android:layout_marginTop">5px</item>
+        <item name="android:layout_marginBottom">5px</item>
+        <item name="android:layout_marginLeft">10px</item>
+        <item name="android:layout_marginRight">10px</item>
+        <item name="android:paddingLeft">5px</item>
+        <item name="android:paddingRight">5px</item>
+    </style>
+
+    <style name="ButtonFont">
+        <item name="android:textSize">9pt</item>
+    </style>
+
+    <style name="UpdateFragmentLayout">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="UpdateFragmentEditText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">9pt</item>
+    </style>
+
+</resources>
