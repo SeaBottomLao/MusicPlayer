@@ -26,6 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private List<Music> music_show = new ArrayList<>();
+    static List<Music> music_content ;
+    private MusicAdapter adapter = new MusicAdapter(MainActivity.this,R.layout.music_context,music_show);
+    ListView listView = (ListView)findViewById(R.id.list_view);
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu,menu);
@@ -44,36 +48,26 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MediaPlayer mediaPlayer = new MediaPlayer();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-        }
-        else {
-        }
-        music_data=getMusic();
-        final MediaPlayer mediaPlayer = new MediaPlayer();
-        listView = (ListView) findViewById(R.id.list_view);
-        initMusic();
-        adapter = new MusicAdapter(MainActivity.this, R.layout.music_l, music_show);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        }//用于读权限验证
+        initMusics();
+        listView.setAdapter(adapter);//setAdapter写入下方词条
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {//listview点击事件
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("position",Integer.toString(position));
-                Music music_play = music_show.get(position);
-                Bundle bundle =new Bundle();
-                bundle.putInt("position",position);
-               /* bundle.putString("title",music_play.getTitle());
-                bundle.putString("artist",music_play.getArtist());
-                bundle.putString("url",music_play.getUrl());
-                bundle.putLong("time",music_play.getDuration());*/
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Music music_play = music_show.get(i);
+                Bundle bundle = new Bundle();//多线程之间传递数据,得到bundle对象
+                bundle.putInt("i",i);
                 Intent intent = new Intent(MainActivity.this,Music_Play.class);
-                intent.putExtras(bundle);
-                //finish();
+                intent.putExtras(bundle);//将数据传到另一个Music_Play活动
                 startActivity(intent);
             }
         });
+
     }
     private long exitTime = 0;
     @Override
@@ -108,57 +102,49 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    private  void initMusic(){
-        for(Music music :music_data) {
+    private void initMusics(){//初始化音乐数据
+        for(Music music :music_content){//foreach循环
             music_show.add(music);
         }
     }
-    public List<Music> getMusic() {
+    public List<Music> getMusic(){
+        //读取
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                null,
-                null,
-                null,
-                MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,null,MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        //MediaStore是Android自带的音频数据库，多媒体信息从此获取，利用ContentResolver来调用封装好的接口即可，可以进行对数据库的增删改查
+        //EXTERNAL_CONTENT_URI是获取所有歌曲的信息，projection指的是从表中选择的列，此处设为空
+        //selections相当于SQL语句中的where子句，代表查询条件，此处为空
+        //selectionArgs代表是否含有，此处可以用null
+        //order说明查询结果按照什么来排序,此处按照默认的排列顺序
+        //Android系统启动时会扫描系统文件，将系统支持的音频，扫描到数据库MediaStore中,从此获取手机上的文件
+        //使用Cursor和contentResolver来进行操作
         List<Music> musicList = new ArrayList<>();
-        // moveToFirst() 定位第一行
-        if (cursor.moveToFirst()) {
-            // getCount()   总数据项数
-            for (int i = 0; i < cursor.getCount(); i++) {
-                Music m = new Music();
+        if(cursor.moveToFirst()==true){//将光标移至第一行
+            for(int i = 0;i < cursor.getCount();i++){//遍历所有行
+                Music music1 = new Music();
                 long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                // 歌的时长
-                long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                // 歌的大小
-                long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-                // 歌的绝对路径
-                String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                // 专辑
-                String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                int album_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                int ismusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));
-                // 如果歌曲符合指定要求，就添加到列表中去
+                long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));// 歌的时长
+                long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE)); // 歌的大小
+                String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)); // 专辑
+                int ismusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC));//判断该歌曲是否符合以下条件，符合即添加到列表
                 if (ismusic != 0 && duration / (500 * 60) >= 1) {
-                    // 对m对象的元素进行赋值
-                    m.setId(id);
-                    m.setTitle(title);
-                    m.setArtist(artist);
-                    m.setDuration(duration);
-                    m.setSize(size);
-                    m.setUrl(url);
-                    m.setAlbum(album);
-                    m.setAlbum_id(album_id);
-                    musicList.add(m);
+                    // 对music1对象的元素进行赋值
+                    music1.setId(id);
+                    music1.setTitle(title);
+                    music1.setArtist(artist);
+                    music1.setDuration(duration);
+                    music1.setSize(size);
+                    music1.setAlbum(album);
+                    musicList.add(music1);
                 }
-                //移动到下一行
-                cursor.moveToNext();
+                cursor.moveToNext();//将光标移动到下一行
             }
         }
-        // 返回一个带数据的Music类的列表
-        return musicList;
-
+        return musicList;//返回音乐列表（符合扫描条件）
     }
+
+
 }
