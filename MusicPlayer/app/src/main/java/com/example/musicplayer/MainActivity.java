@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private long exitTime = 0;
     @Override
+    //退出程序提示的类
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if((System.currentTimeMillis()-exitTime) > 2000){
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public List<Music> getMusic(){
         //读取
+        //Android使用MediaStore获取手机上的文件
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,null,null,null,MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
